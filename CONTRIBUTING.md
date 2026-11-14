@@ -21,7 +21,7 @@ Dependency JARs are intentionally excluded from Git and release artifacts.
 ```
 
 Add `--offline` when Gradle inputs are already cached. The distribution is
-`build/libs/cwi_visual-0.2.3-dev.jar`. The twelve headless verification tasks
+`build/libs/cwi_visual-0.2.4-dev.jar`. The twelve headless verification tasks
 cover weather commands/state/network, ash/fog/caches/budgets/lifecycle, colour,
 firelight and exact installed integration contracts. Selected fixtures use
 minimal in-memory Minecraft objects without a game, server, window or GPU.
