@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.quiwh.cwivisuals.colour.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BiomeColoursMixin",
+    "ClientLevelColourMixin"
+  ],
+  "injectors": {"defaultRequire": 1}
+}

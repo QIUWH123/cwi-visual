@@ -1,0 +1,23 @@
+{
+  "vertex": "cwi_visual:ash_veil",
+  "fragment": "cwi_visual:ash_veil",
+  "blend": {
+    "func": "add",
+    "srcrgb": "srcalpha",
+    "dstrgb": "1-srcalpha",
+    "srcalpha": "1",
+    "dstalpha": "1-srcalpha"
+  },
+  "attributes": ["Position"],
+  "samplers": [
+    { "name": "DepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "InverseViewProjection", "type": "matrix4x4", "count": 16, "values": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0] },
+    { "name": "CameraOffset", "type": "float", "count": 3, "values": [0.0, 0.0, 0.0] },
+    { "name": "Time", "type": "float", "count": 1, "values": [0.0] },
+    { "name": "Strength", "type": "float", "count": 1, "values": [0.0] },
+    { "name": "AshColor", "type": "float", "count": 3, "values": [0.3764706, 0.3764706, 0.3764706] },
+    { "name": "MaxDistance", "type": "float", "count": 1, "values": [256.0] }
+  ]
+}

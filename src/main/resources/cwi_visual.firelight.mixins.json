@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.quiwh.cwivisuals.firelight.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ClientLevelMixin",
+    "EntityRendererMixin",
+    "MinecraftTickMixin",
+    "GlStateManagerMixin",
+    "BlockEntityRenderDispatcherMixin",
+    "sodium.GlProgramMixin",
+    "sodium.ShaderLoaderMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

@@ -1,0 +1,18 @@
+{
+  "cwi_visual.configuration.title": "CWI Visual",
+  "cwi_visual.configuration.enabled": "Enabled",
+  "cwi_visual.configuration.weather": "Ash weather",
+  "cwi_visual.configuration.firelight": "Firelight",
+  "cwi_visual.configuration.strength": "Flicker strength",
+  "cwi_visual.configuration.sources": "Light source block IDs",
+  "cwi_visual.configuration.colour": "World colour",
+  "cwi_visual.configuration.dimensions": "Colour dimension IDs",
+  "cwi_visual.configuration.grassTarget": "Grass target RGB",
+  "cwi_visual.configuration.grassStrength": "Grass blend strength",
+  "cwi_visual.configuration.foliageTarget": "Foliage target RGB",
+  "cwi_visual.configuration.foliageStrength": "Foliage blend strength",
+  "cwi_visual.configuration.waterTarget": "Water target RGB",
+  "cwi_visual.configuration.waterStrength": "Water blend strength",
+  "cwi_visual.configuration.skyTarget": "Sky target RGB",
+  "cwi_visual.configuration.skyStrength": "Sky hue blend strength"
+}

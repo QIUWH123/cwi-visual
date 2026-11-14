@@ -1,0 +1,9 @@
+All Rights Reserved for the original CWI Visual source and assets.
+
+This notice does not replace or restrict the MIT license of the portions
+adapted from Firelight 1.0.3 by comedy01. Those files identify their source.
+The full upstream copyright and MIT permission notice is preserved in
+src/main/resources/META-INF/LICENSE-FIRELIGHT.txt and ships in the mod JAR.
+
+Particle Rain, AsyncParticles, Sodium, Minecraft, NeoForge and other external
+dependencies retain their respective licenses and are not bundled here.

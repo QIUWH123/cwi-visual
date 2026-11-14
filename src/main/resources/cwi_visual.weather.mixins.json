@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.quiwh.cwivisuals.weather.server.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["WeatherCommandMixin"],
+  "injectors": {"defaultRequire": 1}
+}

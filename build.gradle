@@ -1,0 +1,119 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = mod_id }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+repositories { mavenCentral() }
+
+// Exact CWI client integration inputs; local copies are never bundled.
+dependencies {
+    implementation files('libs/particlerain-4.0.3-1.21.1-neoforge.jar')
+    implementation files('libs/AsyncParticles-21.1.4.11-1.21.1.jar')
+}
+
+neoForge {
+    version = neoforge_version
+    mods { "${mod_id}" { sourceSet sourceSets.main } }
+    runs {
+        client {
+            client()
+            gameDirectory = file('build/client-run')
+        }
+    }
+}
+
+sourceSets.test {
+    compileClasspath += sourceSets.main.compileClasspath
+    runtimeClasspath += sourceSets.main.runtimeClasspath
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+    options.compilerArgs += ['-proc:none']
+}
+
+tasks.named('processResources', ProcessResources) {
+    def metadata = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version]
+    inputs.properties metadata
+    filesMatching('META-INF/neoforge.mods.toml') { expand metadata }
+    exclude '**/.DS_Store'
+}
+
+tasks.named('jar', Jar) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    manifest.attributes('Implementation-Title': mod_name,
+            'Implementation-Version': mod_version)
+}
+
+def fixtures = [
+        testPackRendering: 'net.quiwh.cwivisuals.PackRenderingFixture',
+        testFirelightMath: 'net.quiwh.cwivisuals.firelight.FirelightMathFixture',
+        testFirelightNative: 'net.quiwh.cwivisuals.firelight.FirelightNativeFixture',
+        testColour: 'net.quiwh.cwivisuals.colour.ColourFixture',
+        testNativeColourHooks: 'net.quiwh.cwivisuals.colour.NativeColourHooksFixture',
+        testNativeAsh: 'net.quiwh.cwivisuals.weather.NativeAshParticleFixture',
+        testAsyncAshBudget: 'net.quiwh.cwivisuals.weather.AsyncAshBudgetFixture',
+        testAshIntensity: 'net.quiwh.cwivisuals.weather.AshIntensityFixture',
+        testAshSurfaceCache: 'net.quiwh.cwivisuals.weather.AshSurfaceCacheFixture',
+        testLightAshParticle: 'net.quiwh.cwivisuals.weather.LightAshParticleFixture',
+        testAshFog: 'net.quiwh.cwivisuals.weather.AshFogFixture',
+        testAshWeatherServer: 'net.quiwh.cwivisuals.weather.server.AshWeatherServerFixture'
+]
+fixtures.each { taskName, fixture ->
+    tasks.register(taskName, JavaExec) {
+        group = 'verification'
+        dependsOn tasks.named('testClasses'), tasks.named('createMinecraftArtifacts')
+        classpath = sourceSets.test.runtimeClasspath + configurations.clientLegacyClasspath +
+                files("build/moddev/artifacts/neoforge-${neoforge_version}-client-extra-aka-minecraft-resources.jar")
+        mainClass = fixture
+        jvmArgs '-Djava.awt.headless=true', '--enable-native-access=ALL-UNNAMED'
+    }
+    tasks.named('check') { dependsOn tasks.named(taskName) }
+}
+
+// Fixtures are explicit Java mains, not JUnit suites.
+tasks.named('test', Test) { failOnNoDiscoveredTests = false }
+
+tasks.register('verifyDistribution') {
+    group = 'verification'
+    dependsOn tasks.named('jar')
+    doLast {
+        def artifact = tasks.named('jar', Jar).get().archiveFile.get().asFile
+        new java.util.zip.ZipFile(artifact).withCloseable { zip ->
+            def names = zip.entries().collect { it.name }
+            assert names.contains('META-INF/LICENSE-FIRELIGHT.txt'): 'Missing Firelight MIT license'
+            assert names.contains('cwi_visual.firelight.mixins.json')
+            assert names.contains('cwi_visual.colour.mixins.json')
+            assert names.contains('cwi_visual.weather.mixins.json')
+            assert names.contains('assets/cwi_visual/shaders/core/ash_veil.json')
+            assert names.contains('assets/cwi_visual/shaders/core/soft_ash.json')
+            assert !names.any { it.startsWith('docs/') || it.endsWith('Fixture.class') ||
+                    it.endsWith('.java') || it.startsWith('dev/firelight/') ||
+                    it.startsWith('pigcart/') || it.startsWith('fun/qu_an/') ||
+                    it.startsWith('neoforge/fun/qu_an/') || it.startsWith('net/caffeinemc/') ||
+                    it.startsWith('net/quiwh/cwiweather/') ||
+                    it.startsWith('assets/cwi_weather/') ||
+                    it.startsWith('assets/cwi_visuals/') ||
+                    it.startsWith('cwi_visuals.') ||
+                    it.startsWith('com/kragnoth/') }: 'Private/reference/test/legacy content in distribution'
+            def metadata = zip.getInputStream(zip.getEntry('META-INF/neoforge.mods.toml')).getText('UTF-8')
+            assert metadata.count('modId="cwi_visual"') == 1: 'Expected one Visuals mod ID'
+            assert !metadata.contains('modId="cwi_weather"'): 'Legacy Weather initializer must not ship'
+            assert !metadata.contains('${'): 'Unprocessed loader metadata'
+        }
+    }
+}
+tasks.named('check') { dependsOn tasks.named('verifyDistribution') }
+
+idea.module {
+    downloadSources = true
+    downloadJavadoc = true
+    excludeDirs += files('build', 'out', 'run', '.gradle', 'docs', 'exports')
+}
