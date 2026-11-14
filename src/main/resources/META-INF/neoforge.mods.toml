@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[4,)"
-license="All Rights Reserved; Firelight-derived portions MIT (see META-INF/LICENSE-FIRELIGHT.txt)"
+license="${mod_license}"
 
 [[mods]]
 modId="${mod_id}"

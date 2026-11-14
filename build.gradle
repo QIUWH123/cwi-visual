@@ -39,13 +39,14 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 tasks.named('processResources', ProcessResources) {
-    def metadata = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version]
+    def metadata = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, mod_license: mod_license]
     inputs.properties metadata
     filesMatching('META-INF/neoforge.mods.toml') { expand metadata }
     exclude '**/.DS_Store'
 }
 
 tasks.named('jar', Jar) {
+    from(files('LICENSE', 'NOTICE')) { into 'META-INF' }
     preserveFileTimestamps = false
     reproducibleFileOrder = true
     manifest.attributes('Implementation-Title': mod_name,
@@ -89,6 +90,10 @@ tasks.register('verifyDistribution') {
         new java.util.zip.ZipFile(artifact).withCloseable { zip ->
             def names = zip.entries().collect { it.name }
             assert names.contains('META-INF/LICENSE-FIRELIGHT.txt'): 'Missing Firelight MIT license'
+            assert zip.getInputStream(zip.getEntry('META-INF/LICENSE')).getText('UTF-8') ==
+                    file('LICENSE').getText('UTF-8'): 'GPL license must match the full root text'
+            assert zip.getInputStream(zip.getEntry('META-INF/NOTICE')).getText('UTF-8') ==
+                    file('NOTICE').getText('UTF-8'): 'Missing licensing boundary notice'
             assert names.contains('cwi_visual.firelight.mixins.json')
             assert names.contains('cwi_visual.colour.mixins.json')
             assert names.contains('cwi_visual.weather.mixins.json')
@@ -105,6 +110,7 @@ tasks.register('verifyDistribution') {
                     it.startsWith('com/kragnoth/') }: 'Private/reference/test/legacy content in distribution'
             def metadata = zip.getInputStream(zip.getEntry('META-INF/neoforge.mods.toml')).getText('UTF-8')
             assert metadata.count('modId="cwi_visual"') == 1: 'Expected one Visuals mod ID'
+            assert metadata.contains('license="GPL-3.0-only"'): 'Expected GPL version 3 only metadata'
             assert !metadata.contains('modId="cwi_weather"'): 'Legacy Weather initializer must not ship'
             assert !metadata.contains('${'): 'Unprocessed loader metadata'
         }

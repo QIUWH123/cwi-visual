@@ -1,0 +1,17 @@
+CWI Visual
+
+Original CWI Visual code is licensed under the GNU General Public License,
+version 3 only (SPDX-License-Identifier: GPL-3.0-only). You may redistribute
+and modify it under those terms. It is provided without warranty; see LICENSE
+for the full license and warranty disclaimer. No later GPL version is granted.
+
+Firelight-derived portions remain separately licensed under MIT:
+Copyright (c) 2026 comedy01.
+Source: https://github.com/comedy01/Firelight
+The full upstream copyright and permission notice is preserved in
+src/main/resources/META-INF/LICENSE-FIRELIGHT.txt (META-INF/LICENSE-FIRELIGHT.txt
+in the mod JAR). Adapted files identify their upstream source. This GPL grant
+for original CWI code does not replace those upstream MIT terms.
+
+Particle Rain, AsyncParticles, Sodium, Minecraft, NeoForge and other external
+dependencies retain their respective licenses and are not bundled.
