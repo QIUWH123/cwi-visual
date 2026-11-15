@@ -41,7 +41,7 @@ the dimension list. Restart Minecraft after replacing the JAR.
 
 - Minecraft **1.21.1**, NeoForge **21.1.264–21.1.x**, Java **21**.
 - Clients: the **CWI customized Particle Rain 4.0.3** binary,
-  **AsyncParticles 21.1.4.11** and **Sodium 0.8.13+mc1.21.1**.
+  **AsyncParticles 21.1.4.12** and **Sodium 0.8.13+mc1.21.1**.
 - Dedicated servers do not need these client rendering dependencies.
 
 This mod targets that CWI rendering stack. Active shader packs and standalone

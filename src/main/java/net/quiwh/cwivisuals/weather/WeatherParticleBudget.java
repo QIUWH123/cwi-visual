@@ -7,7 +7,7 @@ final class WeatherParticleBudget {
     private WeatherParticleBudget() {}
 
     static int count() {
-        // CWI requires AsyncParticles 21.1.4.11. Its mixins redirect bookkeeping
+        // CWI requires AsyncParticles 21.1.4.12. Its mixins redirect bookkeeping
         // to this atomic counter; ParticleSpawner's native field can remain stale.
         return ParticleRainCompat.particleCount.get();
     }

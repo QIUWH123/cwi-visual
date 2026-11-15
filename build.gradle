@@ -13,7 +13,7 @@ repositories { mavenCentral() }
 // Exact CWI client integration inputs; local copies are never bundled.
 dependencies {
     implementation files('libs/particlerain-4.0.3-1.21.1-neoforge.jar')
-    implementation files('libs/AsyncParticles-21.1.4.11-1.21.1.jar')
+    implementation files('libs/AsyncParticles-21.1.4.12-1.21.1.jar')
 }
 
 neoForge {

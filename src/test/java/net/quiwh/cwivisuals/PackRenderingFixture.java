@@ -36,10 +36,10 @@ public final class PackRenderingFixture {
 
     public static void main(String[] args) throws Exception {
         Path rain = Path.of("libs/particlerain-4.0.3-1.21.1-neoforge.jar");
-        Path async = Path.of("libs/AsyncParticles-21.1.4.11-1.21.1.jar");
+        Path async = Path.of("libs/AsyncParticles-21.1.4.12-1.21.1.jar");
         Path sodium = Path.of("libs/sodium-neoforge-0.8.13+mc1.21.1.jar");
         hash(rain, "1e33e0e74fc8fcdb35f28c6142e63f7df1aede044bcd1eaf933ba0c0bf0b5435");
-        hash(async, "4bc63a92412ec57dcd7cf551f5e69d75f8549d2a5eec01fd21717b45f2ecf02a");
+        hash(async, "6e35a69e7596667793e2b5c3f3564f79e8de5fb2cd18383ad7f27d14ec0f1402");
         hash(sodium, "575d187b15328d7bddd8a9b1bee64333c22c14735f5780ec49eac0cd5503c08d");
 
         checkCounterContract(async);
@@ -75,7 +75,7 @@ public final class PackRenderingFixture {
         int previous = live.get();
         try {
             live.set(37);
-            check(live.get() == 37, "actual .11 atomic counter is available without game startup");
+            check(live.get() == 37, "actual .12 atomic counter is available without game startup");
         } finally {
             live.set(previous);
         }
@@ -122,7 +122,7 @@ public final class PackRenderingFixture {
     private static void checkRequiredIntegration() throws Exception {
         String metadata = new String(resource("META-INF/neoforge.mods.toml"), StandardCharsets.UTF_8);
         dependency(metadata, "particlerain", "[4.0.3,4.0.4)", "4.0.3", "4.0.4");
-        dependency(metadata, "asyncparticles", "[21.1.4.11]", "21.1.4.11", "21.1.4.10");
+        dependency(metadata, "asyncparticles", "[21.1.4.12]", "21.1.4.12", "21.1.4.11", "21.1.4.13");
         dependency(metadata, "sodium", "[0.8.13+mc1.21.1]", "0.8.13+mc1.21.1", "0.8.12+mc1.21.1");
         hook("ShaderLoaderMixin", "getShaderSource(Lnet/minecraft/resources/ResourceLocation;)Ljava/lang/String;");
         hook("GlProgramMixin", "bind()V");
@@ -139,7 +139,7 @@ public final class PackRenderingFixture {
                 "no stale-native-counter fallback remains in the pack integration");
     }
 
-    private static void dependency(String metadata, String id, String version, String installed, String unsupported) throws Exception {
+    private static void dependency(String metadata, String id, String version, String installed, String... unsupported) throws Exception {
         String block = null;
         for (String candidate : metadata.split("\\[\\[")) {
             if (candidate.contains("modId=\"" + id + "\"")) block = candidate;
@@ -151,8 +151,10 @@ public final class PackRenderingFixture {
         VersionRange range = VersionRange.createFromVersionSpec(version);
         check(range.containsVersion(new DefaultArtifactVersion(installed)),
                 "loader version range accepts installed dependency: " + id);
-        check(!range.containsVersion(new DefaultArtifactVersion(unsupported)),
-                "loader version range rejects unverified dependency: " + id);
+        for (String other : unsupported) {
+            check(!range.containsVersion(new DefaultArtifactVersion(other)),
+                    "loader version range rejects unverified dependency: " + id + " " + other);
+        }
     }
 
     private static void hook(String name, String selector) throws Exception {

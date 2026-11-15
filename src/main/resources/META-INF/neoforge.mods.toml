@@ -34,7 +34,7 @@ side="CLIENT"
 [[dependencies.${mod_id}]]
 modId="asyncparticles"
 type="required"
-versionRange="[21.1.4.11]"
+versionRange="[21.1.4.12]"
 ordering="AFTER"
 side="CLIENT"
 
